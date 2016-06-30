@@ -4,8 +4,8 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
+  , load = require('express-load')
+  , methodOverride = require('method-override')
   , http = require('http')
   , path = require('path');
 
@@ -21,15 +21,20 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+//express load
+load('models')
+.then('controllers')
+.then('routes')
+.into(app);
+
 
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
-
-app.get('/', routes.index);
-app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), app.get('server_ip_address'), function(){
   console.log('Express server listening on port ' + app.get('port'));

@@ -3,22 +3,21 @@
  * Module dependencies.
  */
 
-global.path_modules = process.env.PATH_MODULES || ''
-
 var express = require('express')
   , load = require('express-load')
   , methodOverride = require('method-override')
   , http = require('http')
   , path = require('path')
-  , mongoose = require(process.env.PATH_MODULES + 'mongoose');
+  , mongoose = require('mongoose');
 
 var app = express();
 
 // all environments
+app.engine('html', require('ejs').renderFile);
 app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 3000);
 app.set('server_ip_address', process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
+app.set('view engine', 'html');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -26,6 +25,9 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+//swig configuration
+//cons.swig.setDefaults({ varControls: ['{{', '}}'] });
 
 //mongodb configuration
 var connection_string = 'AdminAmanhecer:abcd1234@127.0.0.1:27017/amanhecerdb';

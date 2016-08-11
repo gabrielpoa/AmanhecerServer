@@ -1,6 +1,6 @@
 module.exports = function(app) {
 	
-	var Usuario = require(process.env.PATH_MODULES + 'mongoose').model("Usuario")
+	var Usuario = require('mongoose').model("Usuario")
 	
 	var UsuarioController = {
 

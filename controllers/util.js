@@ -16,7 +16,7 @@ module.exports = function(app) {
 			var decipher = crypto.createCipher(algorithm,password)
 			decrypted = decipher.update(text,'utf8','hex')
 			decrypted += decipher.final('hex');
-		}
+		},
 			
 	};
 	

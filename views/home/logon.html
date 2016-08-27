@@ -7,23 +7,24 @@
 		  <div class="control-group">
 		    <label class="control-label" for="inputEmail">E-mail</label>
 		    <div class="controls">
-		      <input id="inputEmail" type="text" placeholder="Digite o seu e-mail..." />
+		      <input id="inputEmail" type="text" ng-model="email" placeholder="Digite o seu e-mail..." />
 		    </div>
 		  </div>
 		  <div class="control-group">
 		    <label class="control-label" for="inputPassword">Senha</label>
 		    <div class="controls">
-		      <input id="inputPassword" type="password" placeholder="Digite a sua senha..." />
+		      <input id="inputPassword" type="password" ng-model="senha" placeholder="Digite a sua senha..." />
 		    </div>
 		  </div>
 		  <div class="control-group">
 		    <div class="controls">
-		      <button class="btn" type="submit">Acessar</button>
+		    	<input id="inputButton" class="btn" type="button" ng-click="logonUsuario()" value="Entrar" />
 		    </div>
 		  </div>
 		</form>
 	
 		<script src="/javascripts/angular.min.js"></script>
+		<script src="/javascripts/angular.min.js.map"></script>
 		<script src="/javascripts/bootstrap.min.js"></script>
 		<script src="/appscripts/logoncontroller.js"></script>  
 	</body>

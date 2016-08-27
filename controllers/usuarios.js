@@ -58,6 +58,7 @@ module.exports = function(app) {
 		
 		logon: function(req, res) {
 			Usuario.findOne({email: req.body.email, senha: req.body.senha},{nome:1},function(err,usuario){
+				console.log("entrei");
 		        if (err) {
 		            res.status(500);
 		            res.json({

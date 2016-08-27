@@ -4,7 +4,7 @@ module.exports = function(app) {
     	algorithm = 'aes-256-ctr',
     	password = 'x83js7ks6';
 
-	var UtilController = {
+	var LibutilController = {
 			
 		encrypt: function(text, crypted) {
 			var cipher = crypto.createCipher(algorithm,password)
@@ -17,8 +17,7 @@ module.exports = function(app) {
 			decrypted = decipher.update(text,'utf8','hex')
 			decrypted += decipher.final('hex');
 		},
-			
 	};
 	
-	return UtilController;	
+	return LibutilController;	
 };

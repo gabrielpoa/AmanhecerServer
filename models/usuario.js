@@ -1,5 +1,5 @@
 module.exports = function(app) {
-	var Schema = require(process.env.PATH_MODULES + 'mongoose').Schema;
+	var Schema = require('mongoose').Schema;
 
 	var UsuarioSchema = Schema({
 		nome: {type: String, required: true},

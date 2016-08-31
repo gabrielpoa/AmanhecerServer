@@ -7,14 +7,21 @@ angular.module('logonmodule',[])
        console.log("Enviando: " + JSON.stringify(objeto));           
        $http.post('/usuarios/logon',objeto, {headers: {'Content-Type': 'application/json'}})
           .success(function(data,status) {
-            var token = btoa("{\"email\" : \"" 
-                       + $scope.email 
-                       + "\", \"senha\" : \"" 
-                       + $scope.senha + "\"}");
-            $http.defaults.headers.common.Authorization = 'BASIC ' + token;
-            sessionStorage.token = token;
-            console.log("Login OK");
-            window.location.href = "/";
+        	//var response = JSON.parse(data);
+        	
+            //var xmlHttp = new XMLHttpRequest();
+            //xmlHttp.open('Get', '/', true);
+            //xmlHttp.setRequestHeader('Authorization', 'BASIC ' + data.token);
+            //xmlHttp.send();
+
+ 	  
+        	  
+            //sessionStorage.token = data.token;
+            $http.defaults.headers.common.Authorization = 'BASIC ' + data.token;
+            //$http.get   .url('/');
+            //console.log("Login OK");
+            window.location.header
+            window.location.replace("/");
           })
           .error(function(data, status) {
           });

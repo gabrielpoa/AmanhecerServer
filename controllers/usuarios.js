@@ -1,7 +1,7 @@
 module.exports = function(app) {
 	
 	var Usuario = require('mongoose').model("Usuario")
-	var libutil = require('./libutil');
+	var Libutil = require('./libutil');
 	
 	var UsuarioController = {
 
@@ -57,7 +57,7 @@ module.exports = function(app) {
 		},	
 		
 		logon: function(req, res) {
-			Usuario.findOne({email: req.body.email, senha: req.body.senha},{nome:1},function(err,usuario){
+			Usuario.findOne({email: req.body.email, senha: req.body.senha},{nome:1, email:2},function(err,usuario){
 				console.log("entrei");
 		        if (err) {
 		            res.status(500);
@@ -67,8 +67,12 @@ module.exports = function(app) {
 		            })
 		        } else {
 		        	if(usuario) {
+		        		var lbUtil = new Libutil();
+		        		var usr = JSON.stringify(usuario)
+		        		console.log("json: " + usr);
+		        		console.log("encrypt: " + lbUtil.encrypt(usr));
 			            res.json({
-			            	"usuario": usuario
+			            	"token": lbUtil.encrypt(usr)
 			            })		        		
 		        	} else {
 		        		res.status(204);
@@ -101,7 +105,7 @@ module.exports = function(app) {
 			 if (req.path == '/logon') {
 				 return true;
 			 } else {
-			   var lbUtil = new libutil();		 
+			   var lbUtil = new Libutil();		 
 			   var authOk = false;
 			   var auth = req.headers['authorization'];
 			   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -109,23 +113,23 @@ module.exports = function(app) {
 			   console.log(">>> IP: " + ip);
 			   
 			   if (auth) {
-				     var b64 = new Buffer(auth.substring(6), 'base64');
-				     var sobj = b64.toString();
-				     var objJson = lbUtil.decrypt(sobj);
+				     //var b64 = new Buffer(auth.substring(6), 'base64');
+				     //var sobj = b64.toString();
+				     var objJson = lbUtil.decrypt(auth.substring(6));
 				     var objeto = JSON.parse(objJson);         
-				     console.log(">>> Conteudo: " + JSON.stringify(objeto));
-				     
-				     Usuario.findOne({id: objeto.id, email: objeto.email},{email:1},function(err,usuario){
+			     
+				     Usuario.findById(objeto._id,function(err,usuario){
 				        if (err) {
 				            console.log(">>> erro" + err);				        	
 			        		return "home/logon";
 
 				        } else {
-				        	if(usuario && ip == objeto.ip) {
+				        	if(usuario) {
 				        		console.log(">>> OK");
+				        		console.log(page);
 				        		return page;	        		
 				        	} else {
-				        		console.log(">>> usuario inexiste ou ip diferente");
+				        		console.log(">>> Token inválido");
 				        		return "home/logon";		                
 				        	}
 				        }				

@@ -6,9 +6,7 @@ module.exports = function(app) {
 	
 	var HomeController = {
 		index: function(req, res) {
-			var xxxx = usr.logged(req, res, 'home/index');
-			console.log(xxxx);
-			res.render(xxxx);
+			res.render(usr.logged(req, res, 'home/index'));
 		},
 		logon: function(req, res) {
 			res.render('home/logon');

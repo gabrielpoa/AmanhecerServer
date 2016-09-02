@@ -105,8 +105,8 @@ module.exports = function(app) {
 			 if (req.path == '/logon') {
 				 return true;
 			 } else {
+			   var returnPage = "home/logon";
 			   var lbUtil = new Libutil();		 
-			   var authOk = false;
 			   var auth = req.headers['authorization'];
 			   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 			   console.log(">>> Header: " + auth);
@@ -117,25 +117,26 @@ module.exports = function(app) {
 				     //var sobj = b64.toString();
 				     var objJson = lbUtil.decrypt(auth.substring(6));
 				     var objeto = JSON.parse(objJson);         
-			     
+				     console.log(">>> _id: " + objeto._id);
 				     Usuario.findById(objeto._id,function(err,usuario){
 				        if (err) {
 				            console.log(">>> erro" + err);				        	
-			        		return "home/logon";
+				            //page = "home/logon";
 
 				        } else {
 				        	if(usuario) {
 				        		console.log(">>> OK");
 				        		console.log(page);
-				        		return page;	        		
+				        		returnPage = page;
+       		
 				        	} else {
 				        		console.log(">>> Token inválido");
-				        		return "home/logon";		                
+				        		//page = "home/logon";		                
 				        	}
 				        }				
 					 });	     
 				}
-			   return "home/logon";
+			   return returnPage;
 			 }
 		}		
 	

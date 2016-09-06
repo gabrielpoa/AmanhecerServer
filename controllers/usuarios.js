@@ -58,7 +58,6 @@ module.exports = function(app) {
 		
 		logon: function(req, res) {
 			Usuario.findOne({email: req.body.email, senha: req.body.senha},{nome:1, email:2},function(err,usuario){
-				console.log("entrei");
 		        if (err) {
 		            res.status(500);
 		            res.json({
@@ -100,12 +99,26 @@ module.exports = function(app) {
 			res.redirect('/usuarios');
 		},	
 		
-		logged: function(req, res, page) {
+		logged: function(req, page, res) {
 			
+			
+		   var twisted = function(res){
+		        return function(err, data){
+		            if (err){
+		                console.log('error occured');
+		                return;
+		            }
+		            res.send('My ninjas are:\n');
+		            console.log(data);
+		        }
+		    }
+			
+			
+			 var logonPage = "home/logon";
+			 
 			 if (req.path == '/logon') {
-				 return true;
+				 return logonPage;
 			 } else {
-			   var returnPage = "home/logon";
 			   var lbUtil = new Libutil();		 
 			   var auth = req.headers['authorization'];
 			   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -119,24 +132,25 @@ module.exports = function(app) {
 				     var objeto = JSON.parse(objJson);         
 				     console.log(">>> _id: " + objeto._id);
 				     Usuario.findById(objeto._id,function(err,usuario){
+						console.log("entrei");
 				        if (err) {
 				            console.log(">>> erro" + err);				        	
-				            //page = "home/logon";
+				            return logonPage;
 
 				        } else {
 				        	if(usuario) {
 				        		console.log(">>> OK");
-				        		console.log(page);
-				        		returnPage = page;
+				        		return page;
        		
 				        	} else {
 				        		console.log(">>> Token inválido");
-				        		//page = "home/logon";		                
+				        		return logonPage;		                
 				        	}
 				        }				
 					 });	     
-				}
-			   return returnPage;
+			   } else {
+				   return logonPage;
+			   }
 			 }
 		}		
 	

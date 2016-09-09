@@ -52,7 +52,7 @@ module.exports = function(app) {
 		            res.json({
 		                "usuario": usuario
 		            })
-		        }				
+		        }	
 		    });
 		},	
 		
@@ -99,25 +99,13 @@ module.exports = function(app) {
 			res.redirect('/usuarios');
 		},	
 		
-		logged: function(req, page, res) {
-			
-			
-		   var twisted = function(res){
-		        return function(err, data){
-		            if (err){
-		                console.log('error occured');
-		                return;
-		            }
-		            res.send('My ninjas are:\n');
-		            console.log(data);
-		        }
-		    }
-			
-			
-			 var logonPage = "home/logon";
+		logged: function(req, page, callback) {
 			 
+			 var logonPage = "home/logon";
+			 var status = 200;
+			
 			 if (req.path == '/logon') {
-				 return logonPage;
+				 page = logonPage;
 			 } else {
 			   var lbUtil = new Libutil();		 
 			   var auth = req.headers['authorization'];
@@ -125,34 +113,41 @@ module.exports = function(app) {
 			   console.log(">>> Header: " + auth);
 			   console.log(">>> IP: " + ip);
 			   
-			   if (auth) {
+			   if (auth && auth.substring(6).trim() != "undefined") {
 				     //var b64 = new Buffer(auth.substring(6), 'base64');
 				     //var sobj = b64.toString();
 				     var objJson = lbUtil.decrypt(auth.substring(6));
 				     var objeto = JSON.parse(objJson);         
 				     console.log(">>> _id: " + objeto._id);
 				     Usuario.findById(objeto._id,function(err,usuario){
-						console.log("entrei");
 				        if (err) {
-				            console.log(">>> erro" + err);				        	
-				            return logonPage;
+				            console.log(">>> erro" + err);	
+				            page = logonPage;
+				            status = 500;
+				            //page = "home/logon";
 
 				        } else {
 				        	if(usuario) {
 				        		console.log(">>> OK");
-				        		return page;
-       		
+				        		console.log(page);
+				        		page = page;
+      		
 				        	} else {
 				        		console.log(">>> Token inválido");
-				        		return logonPage;		                
+				        		//page = "home/logon";		      
+				        		page = logonPage;
+				        		status = 401;
 				        	}
 				        }				
 					 });	     
-			   } else {
-				   return logonPage;
-			   }
+				} else {
+					page = logonPage;
+				}
 			 }
-		}		
+				
+			 callback(page, status);
+		}	
+
 	
 	}
 

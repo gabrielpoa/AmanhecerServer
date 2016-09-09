@@ -6,8 +6,10 @@ module.exports = function(app) {
 	
 	var HomeController = {
 		index: function(req, res) {
-			var retorno = usr.logged(req, 'home/index');
-			res.render(retorno);
+			usr.logged(req, 'home/index', function(page, status) {
+				res.statusCode = status;
+				res.render(page);
+			});
 		},
 		logon: function(req, res) {
 			res.render('home/logon');
